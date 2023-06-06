@@ -9,7 +9,7 @@ import (
 )
 
 func main() {
-	viper.SetConfigFile("../ingester/.env")
+	viper.SetConfigFile(".env")
 	if err := viper.ReadInConfig(); err != nil {
 		log.Fatalf("Error while reading config file %s", err)
 	}
@@ -25,6 +25,8 @@ func main() {
 	}
 
 	vocabularyService := vocabulary.NewVocabularyService(spreadsheetId, publisher, googleSheetClient)
+	vocabularyService.ProcessMessages(context.Background())
+
 	cronClient := pkg.NewCronClient()
 	cronClient.Schedule("30m", func() {
 		if err = vocabularyService.ProcessMessages(context.Background()); err != nil {

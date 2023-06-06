@@ -1,8 +1,8 @@
 package elastic
 
 import (
+	"fmt"
 	"github.com/elastic/go-elasticsearch/v8"
-	"github.com/labstack/gommon/log"
 	"net/http"
 )
 
@@ -16,8 +16,7 @@ func NewClient() (*elasticsearch.Client, error) {
 
 	es, err := elasticsearch.NewClient(config)
 	if err != nil {
-		log.Error(err)
-		return nil, err
+		return nil, fmt.Errorf("error initializing elastic client %v", err)
 	}
 
 	return es, nil
