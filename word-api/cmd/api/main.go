@@ -1,25 +1,25 @@
 package main
 
 import (
-	"github.com/dilaragorum/word-explorer/word-api/internal/pkg/elastic"
 	"github.com/dilaragorum/word-explorer/word-api/internal/vocabulary"
+	"github.com/dilaragorum/word-explorer/word-api/pkg/elastic"
 	"github.com/gofiber/fiber/v2"
 	"log"
 )
 
 func main() {
 	app := fiber.New(fiber.Config{DisableStartupMessage: true})
-	conn, err := elastic.NewClient()
+	esClient, err := elastic.NewClient()
 	if err != nil {
-		panic("Cannot connect to DB")
+		log.Fatal("Cannot connect to DB ", err.Error())
 	}
 
 	// Vocabulary
-	vocabRepo := vocabulary.NewRepository(conn)
+	vocabRepo := vocabulary.NewRepository(esClient)
 	vocabService := vocabulary.NewService(vocabRepo)
 	vocabulary.NewHandler(app, vocabService)
 
-	if err = app.Listen(":3000"); err != nil {
+	if err = app.Listen(":3200"); err != nil {
 		log.Fatal(err)
 	}
 }

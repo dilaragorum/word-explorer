@@ -2,7 +2,7 @@ package elastic
 
 import (
 	"fmt"
-	"github.com/elastic/go-elasticsearch/v8"
+	"github.com/elastic/go-elasticsearch/v7"
 	"net/http"
 )
 
@@ -11,6 +11,7 @@ func NewClient() (*elasticsearch.Client, error) {
 		Addresses: []string{"http://localhost:9200"},
 		Transport: &http.Transport{
 			MaxConnsPerHost: 100,
+			MaxIdleConns:    100,
 		},
 	}
 

@@ -21,10 +21,12 @@ func main() {
 			continue
 		}
 
+		log.Infof("Message arrived %v", message)
+
 		bytesMsg, _ := json.Marshal(message)
 		bufferBytes := bytes.NewBuffer(bytesMsg)
 
-		_, err = http.Post("http://localhost:3000/api/v1/words", "application/json", bufferBytes)
+		_, err = http.Post("http://localhost:3200/api/v1/words", "application/json", bufferBytes)
 		if err != nil {
 			log.Error(err)
 		}

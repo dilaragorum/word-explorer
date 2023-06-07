@@ -7,21 +7,11 @@ type Vocabulary struct {
 }
 
 type SearchModel struct {
-	Took     int  `json:"took"`
-	TimedOut bool `json:"timed_out"`
-	Shards   struct {
-		Total      int `json:"total"`
-		Successful int `json:"successful"`
-		Skipped    int `json:"skipped"`
-		Failed     int `json:"failed"`
-	} `json:"_shards"`
 	Hits struct {
 		Total struct {
-			Value    int    `json:"value"`
-			Relation string `json:"relation"`
+			Value int `json:"value"`
 		} `json:"total"`
-		MaxScore float64 `json:"max_score"`
-		Hits     []struct {
+		Hits []struct {
 			Index  string  `json:"_index"`
 			ID     string  `json:"_id"`
 			Score  float64 `json:"_score"`
@@ -34,10 +24,23 @@ type SearchModel struct {
 	} `json:"hits"`
 }
 
-func (sm *SearchModel) ToDTO() *[]Vocabulary {
-	var vocabs []Vocabulary
+func (sm *SearchModel) ToDTO() FilterResult {
+	var responseModel FilterResult
 
+	responseModel.Total = sm.Hits.Total.Value
+
+	vocabs := sm.toSearchModelToVocab()
+
+	responseModel.Vocabularies = vocabs
+
+	return responseModel
+}
+
+func (sm *SearchModel) toSearchModelToVocab() []Vocabulary {
 	results := sm.Hits.Hits
+
+	vocabs := make([]Vocabulary, 0, len(results))
+
 	for k := range results {
 		v := Vocabulary{
 			Word:     results[k].Source.Word,
@@ -48,11 +51,5 @@ func (sm *SearchModel) ToDTO() *[]Vocabulary {
 		vocabs = append(vocabs, v)
 	}
 
-	return &vocabs
-}
-
-type SearchArgs struct {
-	Page    int    `json:"page"`
-	Size    int    `json:"size"`
-	SubWord string `json:"sub_word"`
+	return vocabs
 }

@@ -9,7 +9,6 @@ type KafkaReader struct {
 	kr *kafka.Reader
 }
 
-// TODO: Consumer Group kavramını ögrenelim.
 func NewReader(topic, groupID string) *KafkaReader {
 	return &KafkaReader{
 		kr: kafka.NewReader(kafka.ReaderConfig{
@@ -23,7 +22,7 @@ func NewReader(topic, groupID string) *KafkaReader {
 func (r *KafkaReader) ReadMessage(ctx context.Context) (kafka.Message, error) {
 	message, err := r.kr.ReadMessage(ctx)
 	if err != nil {
-		return kafka.Message{}, nil
+		return kafka.Message{}, err
 	}
 	return message, nil
 }
