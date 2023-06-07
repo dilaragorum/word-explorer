@@ -25,7 +25,6 @@ func main() {
 	}
 
 	vocabularyService := vocabulary.NewVocabularyService(spreadsheetId, publisher, googleSheetClient)
-	vocabularyService.ProcessMessages(context.Background())
 
 	cronClient := pkg.NewCronClient()
 	cronClient.Schedule("30m", func() {
@@ -33,6 +32,7 @@ func main() {
 			log.Error("Error cron function " + err.Error())
 		}
 	})
+
 	cronClient.Start()
 	defer cronClient.Stop()
 

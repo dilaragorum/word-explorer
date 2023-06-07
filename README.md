@@ -5,6 +5,7 @@ Main dependencies:
 - HTTP Server: [fiber](https://github.com/gofiber/fiber)
 - Database : [elasticsearch](https://github.com/elastic/go-elasticsearch)
 - Message Broker: [kafka](https://github.com/segmentio/kafka-go)
+- Cron: [gocron](https://github.com/go-co-op/gocron)
 
 
 ## Project Layout
@@ -73,5 +74,27 @@ Main dependencies:
 
 ![Screenshot](Project-Architecture.png)
 
+## Motivation
 
+Imagine you have English words with their meanings and example sentences in your Excel sheet in your drive. However, because you are really hardworking, these sheets' size is expanding day by day. You can not search words quickly because the sheet is frozen. As a result, you need the application to search your words quickly.
+
+
+
+You want to store every change in your sheet. Let's know our applications:
+
+
+
+Ingester: Retrieve data from the Excel sheet and compare them. If there is any change, it sends the changed data as a message to the Kafka broker.
+
+
+
+Consumer: Read messages from Kafka Topic and sends these messages to Word API
+
+
+
+Word API: Enables us to communicate Elastic Search, which provides full-text search very fast and stores our data.
+
+
+
+All these applications are dockerized, and the docker-composed file is used to run Elastic Search, Kafka, Kibana, and Zookeeper containers.  
 
